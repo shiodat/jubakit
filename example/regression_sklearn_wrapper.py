@@ -12,7 +12,8 @@ In this example, we show how to use scikit-learn wrapper's
 
 """
 
-from jubakit.wrapper.regression import LinearRegression, NearestNeighborsRegression
+from jubakit.wrapper.regression import LinearRegression
+from jubakit.wrapper.regression import NearestNeighborsRegression
 
 from sklearn.datasets import load_boston
 from sklearn.decomposition import PCA
@@ -44,8 +45,10 @@ pca_pipeline = Pipeline([
     ('regression', clf)
 ])
 
+nn = NearestNeighborsRegression(nearest_neighbor_num=5, weight='distance')
+
 # evaluate each pipelines
-pipelines = [clf, scaled_pipeline, pca_pipeline]
+pipelines = [clf, scaled_pipeline, pca_pipeline, nn]
 for pipeline in pipelines:
     print(pipeline)
     pipeline.fit(X_train, y_train)

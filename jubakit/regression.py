@@ -198,6 +198,7 @@ class Config(GenericConfig):
             'hash_num': 64
           },
           'nearest_neighbor_num': 128,
+          'weight': 'uniform',
         }
       else:
         raise RuntimeError('unknown method: {0}'.format(method))

@@ -20,6 +20,8 @@ class BaseJubatusRegression(BaseEstimator, RegressorMixin):
     self.shuffle = shuffle
     self.embedded = embedded
     self.seed = seed
+    self.regression_ = None
+    self.config_ = None
 
   @classmethod
   def _launch_regression(self):
@@ -142,21 +144,24 @@ class LinearRegression(BaseJubatusRegression):
 
 class NearestNeighborsRegression(BaseJubatusRegression):
 
-  def __init__(self, method='euclid_lsh', nearest_neighbor_num=5,
-               hash_num=128, n_iter=1, shuffle=False, embedded=True, seed=None):
+  def __init__(self, method='euclid_lsh', nearest_neighbor_num=5, hash_num=128,
+               weight='uniform', n_iter=1, shuffle=False, embedded=True, seed=None):
     super(NearestNeighborsRegression, self).__init__(n_iter, shuffle, embedded, seed)
     self.method = method
     self.nearest_neighbor_num = nearest_neighbor_num
     self.hash_num = hash_num
+    self.weight = weight
 
   def _launch_regression(self):
     if self.method in ('euclid_lsh', 'lsh', 'minhash'):
       self.config_ = Config(method='NN', parameter={'method': self.method,
                                                     'nearest_neighbor_num': self.nearest_neighbor_num,
+                                                    'weight': self.weight,
                                                     'parameter': {'hash_num': self.hash_num}})
     elif self.method in ('euclidean', 'cosine'):
       self.config_ = Config(method=self.method,
-                            parameter={'nearest_neighbor_num': self.nearest_neighbor_num})
+                            parameter={'nearest_neighbor_num': self.nearest_neighbor_num,
+                                       'weight': self.weight})
     else:
       raise NotImplementedError('method {} is not implemented yet.'.format(self.method))
     self.regression_ = Regression.run(config=self.config_, embedded=self.embedded)
@@ -166,9 +171,9 @@ class NearestNeighborsRegression(BaseJubatusRegression):
       'method': self.method,
       'nearest_neighbor_num': self.nearest_neighbor_num,
       'hash_num': self.hash_num,
+      'weight': self.weight,
       'n_iter': self.n_iter,
       'shuffle': self.shuffle,
-      'softmax': self.softmax,
       'embedded': self.embedded,
       'seed': self.seed
     }
