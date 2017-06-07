@@ -10,11 +10,11 @@ except ImportError:
   pass
 
 from jubakit.wrapper.classifier import LinearClassifier, NearestNeighborsClassifier
-from . import requireEmbedded
+from .. import requireEmbedded
 
 
 class LinearClassifierTest(TestCase):
-  
+
   def test_simple(self):
     classifier = LinearClassifier()
     classifier.stop()
@@ -22,6 +22,7 @@ class LinearClassifierTest(TestCase):
   @requireEmbedded
   def test_embedded(self):
     classifier = LinearClassifier(embedded=True)
+    classifier.stop()
 
   @requireEmbedded
   def test_launch_classifier(self):
@@ -38,11 +39,10 @@ class LinearClassifierTest(TestCase):
     X = np.array([[1,1], [0,0]])
     y = np.array([1,2])
     classifier = LinearClassifier()
-    self.assertTrue(classifier.clf_ is None)
-    self.assertEqual(classifier.fitted_, False)
+    self.assertTrue(classifier.classifier_ is None)
     classifier.partial_fit(X, y)
-    self.assertTrue(classifier.clf_ is not None)
-    self.assertEqual(classifier.fitted_, True)
+    self.assertTrue(classifier.classifier_ is not None)
+    classifier.stop()
 
   @requireEmbedded
   def test_predict(self):
@@ -53,7 +53,8 @@ class LinearClassifierTest(TestCase):
     classifier.fit(X, y)
     y_pred = classifier.predict(X)
     self.assertEqual(y_pred.shape[0], X.shape[0])
-  
+    classifier.stop()
+
   @requireEmbedded
   def test_decision_function(self):
     X = np.array([[1,1], [0,0]])
@@ -64,6 +65,7 @@ class LinearClassifierTest(TestCase):
     classifier.fit(X, y)
     y_pred = classifier.decision_function(X)
     self.assertEqual(y_pred.shape, (X.shape[0], c.shape[0]))
+    classifier.stop()
 
   @requireEmbedded
   def test_class_params(self):
@@ -73,11 +75,12 @@ class LinearClassifierTest(TestCase):
     for param in params:
       self.assertTrue(param in classifier.__dict__)
     self.assertTrue('invalid_param' not in classifier.__dict__)
+    classifier.stop()
 
   @requireEmbedded
   def test_get_params(self):
     params = {
-      'method': 'CW', 
+      'method': 'CW',
       'regularization_weight': 5.0,
       'softmax': True,
       'n_iter': 5,
@@ -92,7 +95,7 @@ class LinearClassifierTest(TestCase):
   @requireEmbedded
   def test_set_params(self):
     params = {
-      'method': 'CW', 
+      'method': 'CW',
       'regularization_weight': 5.0,
       'softmax': True,
       'n_iter': 5,
@@ -109,16 +112,18 @@ class LinearClassifierTest(TestCase):
     self.assertEqual(classifier.shuffle, params['shuffle'])
     self.assertEqual(classifier.embedded, params['embedded'])
     self.assertEqual(classifier.seed, params['seed'])
+    classifier.stop()
 
   @requireEmbedded
   def test_save(self):
     name = 'test'
     classifier = LinearClassifier()
     classifier.save(name)
+    classifier.stop()
 
 
 class NearestNeighborsClassifierTest(TestCase):
-  
+
   def test_simple(self):
     classifier = NearestNeighborsClassifier()
     classifier.stop()
@@ -126,6 +131,7 @@ class NearestNeighborsClassifierTest(TestCase):
   @requireEmbedded
   def test_embedded(self):
     classifier = NearestNeighborsClassifier(embedded=True)
+    classifier.stop()
 
   @requireEmbedded
   def test_launch_classifier(self):
@@ -142,11 +148,9 @@ class NearestNeighborsClassifierTest(TestCase):
     X = np.array([[1,1], [0,0]])
     y = np.array([1,2])
     classifier = NearestNeighborsClassifier()
-    self.assertTrue(classifier.clf_ is None)
-    self.assertEqual(classifier.fitted_, False)
+    self.assertTrue(classifier.classifier_ is None)
     classifier.partial_fit(X, y)
-    self.assertTrue(classifier.clf_ is not None)
-    self.assertEqual(classifier.fitted_, True)
+    self.assertTrue(classifier.classifier_ is not None)
     classifier.stop()
 
   @requireEmbedded
@@ -158,6 +162,7 @@ class NearestNeighborsClassifierTest(TestCase):
     classifier.fit(X, y)
     y_pred = classifier.predict(X)
     self.assertEqual(y_pred.shape[0], X.shape[0])
+    classifier.stop()
 
   @requireEmbedded
   def test_decision_function(self):
@@ -169,6 +174,7 @@ class NearestNeighborsClassifierTest(TestCase):
     classifier.fit(X, y)
     y_pred = classifier.decision_function(X)
     self.assertEqual(y_pred.shape, (X.shape[0], c.shape[0]))
+    classifier.stop()
 
   @requireEmbedded
   def test_class_params(self):
@@ -178,11 +184,12 @@ class NearestNeighborsClassifierTest(TestCase):
     for param in params:
       self.assertTrue(param in classifier.__dict__)
     self.assertTrue('invalid_param' not in classifier.__dict__)
+    classifier.stop()
 
   @requireEmbedded
   def test_get_params(self):
     params = {
-      'method': 'lsh', 
+      'method': 'lsh',
       'nearest_neighbor_num': 10,
       'local_sensitivity': 0.1,
       'hash_num': 512,
@@ -194,11 +201,12 @@ class NearestNeighborsClassifierTest(TestCase):
     }
     classifier = NearestNeighborsClassifier(**params)
     self.assertDictEqual(params, classifier.get_params())
+    classifier.stop()
 
   @requireEmbedded
   def test_set_params(self):
     params = {
-      'method': 'lsh', 
+      'method': 'lsh',
       'nearest_neighbor_num': 10,
       'local_sensitivity': 0.1,
       'hash_num': 512,
@@ -219,11 +227,13 @@ class NearestNeighborsClassifierTest(TestCase):
     self.assertEqual(classifier.shuffle, params['shuffle'])
     self.assertEqual(classifier.embedded, params['embedded'])
     self.assertEqual(classifier.seed, params['seed'])
-   
+    classifier.stop()
+
   @requireEmbedded
   def test_save(self):
     name = 'test'
     classifier = NearestNeighborsClassifier()
     classifier.save(name)
+    classifier.stop()
 
 

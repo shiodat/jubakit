@@ -21,6 +21,8 @@ class BaseJubatusClassifier(BaseEstimator, ClassifierMixin):
     self.shuffle = shuffle
     self.embedded = embedded
     self.seed = seed
+    self.classifier_ = None
+    self.config_ = None
 
   @classmethod
   def _launch_classifier(self):
