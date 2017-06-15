@@ -13,6 +13,7 @@ before_install:
 
 install:
     # Install Jubatus
+    - sudo dpkg --remove-architecture i386q
     - sudo bash -c 'echo "deb http://download.jubat.us/apt binary/" > /etc/apt/sources.list.d/jubatus.list'
     - sudo apt-get -qq update
     - sudo apt-get -qq --force-yes install jubatus
